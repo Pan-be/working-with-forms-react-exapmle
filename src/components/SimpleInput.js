@@ -4,15 +4,34 @@ const SimpleInput = (props) => {
 	const [enteredName, setEnteredName] = useState("")
 	const [enteredNameIsTouched, setEnteredNameIsTouched] = useState(false)
 
+	const [enteredMail, setEnteredMail] = useState("")
+	const [enteredMailIsTouched, setEnteredMailIsTouched] = useState(false)
+
 	const enteredNameIsValid = enteredName.trim() !== ""
 	const nameInputIsInvalid = !enteredNameIsValid && enteredNameIsTouched
+
+	const enteredMailIsValid = enteredMail.includes("@")
+	const enteredMailIsInvalid = !enteredMailIsValid && enteredMailIsTouched
+
+	let formIsValid = false
+	if (enteredNameIsValid) {
+		formIsValid = true
+	}
 
 	const nameInputChangeHandler = (e) => {
 		setEnteredName(e.target.value)
 	}
 
+	const mailInputChangeHandler = (e) => {
+		setEnteredMail(e.target.value)
+	}
+
 	const nameInputBlurHandler = (e) => {
 		setEnteredNameIsTouched(true)
+	}
+
+	const mailInputBlurHandler = (e) => {
+		setEnteredMailIsTouched(true)
 	}
 
 	const onSubmitHandler = (e) => {
@@ -27,9 +46,15 @@ const SimpleInput = (props) => {
 		console.log(enteredName)
 		setEnteredName("")
 		setEnteredNameIsTouched(false)
+		setEnteredMail("")
+		setEnteredMailIsTouched(false)
 	}
 
 	const validInputClass = nameInputIsInvalid
+		? "form-control invalid"
+		: "form-control"
+
+	const mailInputClass = enteredMailIsTouched
 		? "form-control invalid"
 		: "form-control"
 
@@ -48,8 +73,21 @@ const SimpleInput = (props) => {
 					<p className='error-text'>The input can't be empty</p>
 				)}
 			</div>
+			<div className={mailInputClass}>
+				<label htmlFor='email'>Your e-mail</label>
+				<input
+					type='email'
+					id='email'
+					onChange={mailInputChangeHandler}
+					onBlur={mailInputBlurHandler}
+					value={enteredMail}
+				/>
+				{nameInputIsInvalid && (
+					<p className='error-text'>e-mail address isn't correct</p>
+				)}
+			</div>
 			<div className='form-actions'>
-				<button>Submit</button>
+				<button disabled={!formIsValid}>Submit</button>
 			</div>
 		</form>
 	)
